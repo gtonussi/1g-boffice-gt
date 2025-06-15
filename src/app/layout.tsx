@@ -1,11 +1,8 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import type { Metadata } from "next";
 import { Roboto, Roboto_Mono } from "next/font/google";
 
 import "./globals.css";
-
-import { ThemeProvider } from "@/components/theme-provider";
-
+import { Providers } from "@/components/providers";
 
 const robotoSans = Roboto({
   variable: "--font-roboto-sans",
@@ -21,8 +18,6 @@ export const metadata: Metadata = {
   title: "Back-office app",
 };
 
-const queryClient = new QueryClient();
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -32,16 +27,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head />
       <body className={`${robotoSans.variable} ${robotoMono.variable} antialiased`}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          disableTransitionOnChange
-          enableSystem
-        >
-          <QueryClientProvider client={queryClient}>
-            {children}
-          </QueryClientProvider>
-        </ThemeProvider>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );
