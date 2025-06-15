@@ -1,12 +1,12 @@
 "use client";
 
-import { UsersPannel } from "@/components/ui/users-pannel";
+import { UsersTable } from "@/components/ui/users-table";
 
 export default function Home() {
   return (
     <div className="flex justify-center">
       <div className="max-w-5xl">
-        <UsersPannel />
+        <UsersTable />
       </div>
     </div>
   );
