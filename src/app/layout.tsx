@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Roboto, Roboto_Mono } from "next/font/google";
+
 import "./globals.css";
 import { ThemeProvider } from "@/hooks/theme-provider";
 import { UserProvider } from "@/hooks/user-provider";
