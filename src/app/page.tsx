@@ -1,26 +1,12 @@
 "use client";
 
-import { useUser } from "@/hooks/useUser";
+import { UsersPannel } from "@/components/ui/users-pannel";
 
 export default function Home() {
-  const { users, isLoading: isLoadingUsers } = useUser();
-
   return (
     <div className="flex justify-center">
       <div className="max-w-5xl">
-        {isLoadingUsers ? (
-          <>
-            <p className="text-center text-gray-500">Loading users...</p>
-          </>
-        ) : (
-          <>
-            {users && users.data.length > 0
-              ? users.data.map((user) => {
-                  return <p key={user.id}>{user.email}</p>;
-                })
-              : null}
-          </>
-        )}
+        <UsersPannel />
       </div>
     </div>
   );
