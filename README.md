@@ -33,6 +33,16 @@ docker-compose up -d
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
+## Swith between Reqres API and Mock API:
+
+To smoothly change from mock API (default) and use Reqres API, go to
+
+<samp>
+|-- lib
+<br />|---- api.ts
+<br />Comment the BASE URL according to desired API.
+</samp>
+
 ## Test suites
 
 This project features e2e tests created with Cypress:
