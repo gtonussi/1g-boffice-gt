@@ -1,36 +1,56 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+<p align="center" style="text-align: center;">
+  <span style="font-size: 18px;">Welcome to the Back-Office application</span>
+</p>
 
-## Getting Started
+## Stack:
 
-First, run the development server:
+<p>
+  This project was created using the following stack:
+  <br />
+  <samp>
+    React v19 - Next v15 - Typescript v5 - Tailwind v4 - ShadCN v2 - TanStack Query v5
+  </samp>
+</p>
+
+## How to run it:
+
+Use the following commands on directory root to install and run it:
 
 ```bash
+npm install
+
+#then
+
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+```
+
+If you want to open it using Docker, use the following command:
+
+```bash
+docker-compose up -d
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Test suites
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+This project features e2e tests created with Cypress:
 
-## Learn More
+```bash
+npx cypress open
+```
 
-To learn more about Next.js, take a look at the following resources:
+## Folder structure
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+<p>The project is divided into the following folders:</p>
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+<p>
+<samp>
+|-- cypress (Contains all test files)
+<br />|-- app (Main directory containing the entrance files for NextJS)
+<br />|-- components (React components)
+<br />|-- lib (Sources like API, instances of objects and util functions)
+<br />|-- types (Typescript types that are shared across application)
+<br />|-- hooks (Custom hooks)
+</samp>
+</p>
