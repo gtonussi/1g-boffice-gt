@@ -44,7 +44,6 @@ export function useUser() {
 
   const createUser = useMutation({
     mutationFn: async (newUser: User) => {
-      // Note from testee: This part would connect to API as a POST request and return the response.
       return newUser;
     },
     onSuccess: (newUser) => {
@@ -62,7 +61,6 @@ export function useUser() {
 
   const updateUser = useMutation({
     mutationFn: async (updatedUser: User) => {
-      // Note from testee: This part would connect to API as a PUT request and return the response.
       return updatedUser;
     },
     onSuccess: (updatedUser) => {

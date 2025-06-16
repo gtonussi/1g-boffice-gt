@@ -69,7 +69,18 @@ export function UsersTable() {
           </div>
         ) : (
           <>
-            <DataTable columns={columns} data={data} rowOnClick={(user) => setSelectedUser(user)} />
+            <DataTable
+              columns={columns}
+              data={data}
+              rowOnClick={(user) =>
+                setSelectedUser((prev) => {
+                  if (prev?.id === user.id) {
+                    return null;
+                  }
+                  return user;
+                })
+              }
+            />
 
             <div className="mt-4 flex justify-center">
               <Pagination>

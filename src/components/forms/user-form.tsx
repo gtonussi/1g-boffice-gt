@@ -64,6 +64,14 @@ export function UserForm({ user }: { user: z.infer<typeof FormSchema> | null }) 
   useEffect(() => {
     if (user) {
       form.reset(user);
+    } else {
+      form.reset({
+        id: Math.ceil(Math.random() * 1000),
+        email: "",
+        first_name: "",
+        last_name: "",
+        avatar: "https://i.pravatar.cc/150?img=1",
+      });
     }
   }, [user, form]);
 
@@ -107,7 +115,7 @@ export function UserForm({ user }: { user: z.infer<typeof FormSchema> | null }) 
           )}
         />
         <Button className="w-full" type="submit">
-          Submit
+          {user ? "Update User" : "Create User"}
         </Button>
       </form>
     </Form>
