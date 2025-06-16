@@ -7,6 +7,8 @@ import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
+import { useUser } from "@/hooks/useUser";
+import { useEffect } from "react";
 
 const FormSchema = z.object({
   id: z.number(),
@@ -20,27 +22,50 @@ const FormSchema = z.object({
   avatar: z.string().url(),
 });
 
-export function UserForm() {
+export function UserForm({ user }: { user: z.infer<typeof FormSchema> | null }) {
+  const { createUser, updateUser } = useUser();
+
+  const mutation = user ? updateUser : createUser;
+
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      id: 0,
+      id: Math.ceil(Math.random() * 1000),
       email: "",
       first_name: "",
       last_name: "",
-      avatar: "",
+      avatar: "https://i.pravatar.cc/150?img=1",
     },
   });
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
-    toast("You submitted the following values", {
-      description: (
-        <pre className="mt-2 w-[320px] rounded-md bg-neutral-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
+    mutation.mutate(data, {
+      onSuccess: () => {
+        form.reset();
+        toast.success("You submitted the following values:", {
+          description: (
+            <p>
+              {JSON.stringify(
+                { Email: data.email, "First Name": data.first_name, "Last Name": data.last_name },
+                null,
+                2,
+              )}
+            </p>
+          ),
+        });
+      },
+      onError: (error) => {
+        form.reset();
+        toast.error(`Failed to create user: ${error.message}`);
+      },
     });
   }
+
+  useEffect(() => {
+    if (user) {
+      form.reset(user);
+    }
+  }, [user, form]);
 
   return (
     <Form {...form}>

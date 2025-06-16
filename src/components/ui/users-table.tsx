@@ -49,7 +49,7 @@ const columns: ColumnDef<User>[] = [
 ];
 
 export function UsersTable() {
-  const { users, isLoading, page } = useUser();
+  const { users, isLoading, page, selectedUser, setSelectedUser } = useUser();
 
   const data = users?.data || [];
 
@@ -60,7 +60,7 @@ export function UsersTable() {
   return (
     <div data-name="users-table">
       <div>
-        <UserForm />
+        <UserForm user={selectedUser} />
       </div>
       <div className="mt-4">
         {isLoading ? (
@@ -69,7 +69,7 @@ export function UsersTable() {
           </div>
         ) : (
           <>
-            <DataTable columns={columns} data={data} />
+            <DataTable columns={columns} data={data} rowOnClick={(user) => setSelectedUser(user)} />
 
             <div className="mt-4 flex justify-center">
               <Pagination>

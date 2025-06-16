@@ -17,11 +17,16 @@ export function useUser() {
   const pageFromParams = parseInt(searchParams.get("page") || "1", 10);
 
   const [page, setPage] = useState<Page>(pageFromParams);
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
 
   const queryClient = useQueryClient();
 
   async function getUsers(page: Page): Promise<UserResponse> {
-    const response = await fetch(`${API_URL + USERS_ENDPOINT}${page}`);
+    const response = await fetch(`${API_URL + USERS_ENDPOINT}${page}`, {
+      headers: {
+        "x-api-key": "reqres-free-v1",
+      },
+    });
     if (!response.ok) {
       throw new Error("Failed to fetch users");
     }
@@ -91,5 +96,7 @@ export function useUser() {
     setPage,
     updateUser,
     users,
+    selectedUser,
+    setSelectedUser,
   };
 }
