@@ -1,0 +1,24 @@
+version: "3.8"
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+
+  cypress:
+    image: cypress/included:14.4.1
+    depends_on:
+      - web
+    working_dir: /e2e
+    volumes:
+      - .:/e2e
+    environment:
+      - CYPRESS_baseUrl=http://web:3000
+    command: >
+      npx wait-on http://web:3000 &&
+      npx cypress run
