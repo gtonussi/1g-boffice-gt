@@ -9,9 +9,6 @@ const USERS_ENDPOINT = "/api/users?page=";
 
 export const api = axios.create({
   baseURL: BASE_URL,
-  headers: {
-    "x-api-key": "reqres-free-v1",
-  },
 });
 
 export async function login(data: { email: string; password: string }): Promise<TokenResponse> {
@@ -25,6 +22,6 @@ export async function register(data: { email: string; password: string }): Promi
 }
 
 export async function getUsers(page: number): Promise<UserResponse> {
-  const res = await api.get(`${USERS_ENDPOINT}?page=${page}`);
+  const res = await api.get(`${USERS_ENDPOINT}${page}`);
   return res.data;
 }
