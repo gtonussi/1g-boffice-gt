@@ -10,3 +10,15 @@ export function getHashPage(): number {
   const page = parseInt(hash, 10);
   return isNaN(page) || page < 1 ? 1 : page;
 }
+
+export function getTokenFromCookie(): string | null {
+  if (typeof window === "undefined") return null;
+  const cookies = document.cookie.split("; ");
+  for (const cookie of cookies) {
+    const [name, value] = cookie.split("=");
+    if (name === "token") {
+      return decodeURIComponent(value);
+    }
+  }
+  return null;
+}

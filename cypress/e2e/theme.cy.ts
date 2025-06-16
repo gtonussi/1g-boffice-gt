@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-describe("Theme Switching", () => {
+describe("Theme Switching with LocalStorage persistance", () => {
   beforeEach(() => {
     cy.setCookie("token", "mock-token");
     cy.visit("/");

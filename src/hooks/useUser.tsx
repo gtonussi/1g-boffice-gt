@@ -1,14 +1,12 @@
 "use client";
 
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import { UserResponse } from "@/types/user-response";
 import { User } from "@/types/user";
-
-const API_URL = "https://reqres.in";
-const USERS_ENDPOINT = "/api/users?page=";
+import { getUsers } from "@/lib/api";
 
 type Page = number;
 
@@ -19,19 +17,9 @@ export function useUser() {
   const [page, setPage] = useState<Page>(pageFromParams);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
 
-  const queryClient = useQueryClient();
-
-  async function getUsers(page: Page): Promise<UserResponse> {
-    const response = await fetch(`${API_URL + USERS_ENDPOINT}${page}`, {
-      headers: {
-        "x-api-key": "reqres-free-v1",
-      },
-    });
-    if (!response.ok) {
-      throw new Error("Failed to fetch users");
-    }
-    return response.json();
-  }
+  // Those refs are used to persist mutations in memory
+  const createdUsersRef = useRef<User[]>([]);
+  const updatedUsersRef = useRef<Map<number, User>>(new Map());
 
   const {
     data: users,
@@ -44,18 +32,10 @@ export function useUser() {
 
   const createUser = useMutation({
     mutationFn: async (newUser: User) => {
-      return newUser;
+      return { ...newUser, id: Math.ceil(Math.random() * 1000) }; // Simulating a new user creation
     },
     onSuccess: (newUser) => {
-      queryClient.setQueryData<UserResponse>(["users", page], (oldData) => {
-        if (!oldData) return undefined;
-        return {
-          ...oldData,
-          data: [newUser, ...oldData.data],
-          total: oldData.total + 1,
-          total_pages: Math.ceil((oldData.total + 1) / oldData.per_page),
-        };
-      });
+      createdUsersRef.current.unshift(newUser);
     },
   });
 
@@ -64,18 +44,23 @@ export function useUser() {
       return updatedUser;
     },
     onSuccess: (updatedUser) => {
-      queryClient.setQueryData<UserResponse>(["users", page], (oldData) => {
-        if (!oldData) return undefined;
-        const updatedData = oldData.data.map((user) =>
-          user.id === updatedUser.id ? updatedUser : user,
-        );
-        return {
-          ...oldData,
-          data: updatedData,
-        };
-      });
+      updatedUsersRef.current.set(updatedUser.id, updatedUser);
     },
   });
+
+  const mergedUsers = useMemo(() => {
+    if (!users) return undefined;
+
+    // Apply updates
+    const updatedApiUsers = users.data.map((user) =>
+      updatedUsersRef.current.has(user.id) ? updatedUsersRef.current.get(user.id)! : user,
+    );
+
+    return {
+      ...users,
+      data: [...createdUsersRef.current, ...updatedApiUsers],
+    };
+  }, [users]);
 
   useEffect(() => {
     setPage((prev) => {
@@ -93,7 +78,7 @@ export function useUser() {
     page,
     setPage,
     updateUser,
-    users,
+    users: mergedUsers,
     selectedUser,
     setSelectedUser,
   };

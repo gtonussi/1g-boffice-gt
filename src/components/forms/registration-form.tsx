@@ -42,6 +42,11 @@ export function RegistrationForm() {
             description: <p>{JSON.stringify({ Email: data.email }, null, 2)}</p>,
           });
         },
+        onError: (error) => {
+          toast.error("Registration failed", {
+            description: error?.message || "Something went wrong",
+          });
+        },
       },
     );
   }
