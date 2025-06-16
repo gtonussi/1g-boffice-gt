@@ -10,6 +10,7 @@
   <samp>
     React v19 - Next v15 - Typescript v5 - Tailwind v4 - ShadCN v2 - TanStack Query v5
   </samp>
+  <br /> Check the <a href="./JUSTIFY.md">Justification</a> page for more info on why those libs.
 </p>
 
 ## How to run it:
