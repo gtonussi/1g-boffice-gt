@@ -1,6 +1,6 @@
 "use client";
 
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 
@@ -17,9 +17,7 @@ export function useUser() {
   const [page, setPage] = useState<Page>(pageFromParams);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
 
-  // Those refs are used to persist mutations in memory
-  const createdUsersRef = useRef<User[]>([]);
-  const updatedUsersRef = useRef<Map<number, User>>(new Map());
+  const queryClient = useQueryClient();
 
   const {
     data: users,
@@ -30,12 +28,21 @@ export function useUser() {
     queryFn: () => getUsers(page),
   });
 
+  // Persistance would occur here. In a real application, the post request would change the backend state.
   const createUser = useMutation({
     mutationFn: async (newUser: User) => {
-      return { ...newUser, id: Math.ceil(Math.random() * 1000) }; // Simulating a new user creation
+      return newUser;
     },
     onSuccess: (newUser) => {
-      createdUsersRef.current.unshift(newUser);
+      queryClient.setQueryData<UserResponse>(["users", page], (oldData) => {
+        if (!oldData) return undefined;
+        return {
+          ...oldData,
+          data: [newUser, ...oldData.data],
+          total: oldData.total + 1,
+          total_pages: Math.ceil((oldData.total + 1) / oldData.per_page),
+        };
+      });
     },
   });
 
@@ -44,23 +51,18 @@ export function useUser() {
       return updatedUser;
     },
     onSuccess: (updatedUser) => {
-      updatedUsersRef.current.set(updatedUser.id, updatedUser);
+      queryClient.setQueryData<UserResponse>(["users", page], (oldData) => {
+        if (!oldData) return undefined;
+        const updatedData = oldData.data.map((user) =>
+          user.id === updatedUser.id ? updatedUser : user,
+        );
+        return {
+          ...oldData,
+          data: updatedData,
+        };
+      });
     },
   });
-
-  const mergedUsers = useMemo(() => {
-    if (!users) return undefined;
-
-    // Apply updates
-    const updatedApiUsers = users.data.map((user) =>
-      updatedUsersRef.current.has(user.id) ? updatedUsersRef.current.get(user.id)! : user,
-    );
-
-    return {
-      ...users,
-      data: [...createdUsersRef.current, ...updatedApiUsers],
-    };
-  }, [users]);
 
   useEffect(() => {
     setPage((prev) => {
@@ -78,7 +80,7 @@ export function useUser() {
     page,
     setPage,
     updateUser,
-    users: mergedUsers,
+    users,
     selectedUser,
     setSelectedUser,
   };

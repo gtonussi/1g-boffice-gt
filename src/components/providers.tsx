@@ -5,6 +5,7 @@ import { useState } from "react";
 
 import { queryClient } from "@/lib/query-client";
 
+import { MirageProvider } from "./mirage-provider";
 import { ThemeProvider } from "./theme-provider";
 
 export function Providers({
@@ -15,8 +16,11 @@ export function Providers({
   const [client] = useState(() => queryClient);
 
   return (
-    <ThemeProvider attribute="class" defaultTheme="system" disableTransitionOnChange enableSystem>
-      <QueryClientProvider client={client}>{children}</QueryClientProvider>
-    </ThemeProvider>
+    <>
+      <MirageProvider />
+      <ThemeProvider attribute="class" defaultTheme="system" disableTransitionOnChange enableSystem>
+        <QueryClientProvider client={client}>{children}</QueryClientProvider>
+      </ThemeProvider>
+    </>
   );
 }

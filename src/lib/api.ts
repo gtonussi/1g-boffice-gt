@@ -2,7 +2,8 @@ import { TokenResponse } from "@/types/token-response";
 import { UserResponse } from "@/types/user-response";
 import axios from "axios";
 
-const BASE_URL = "https://reqres.in";
+//const BASE_URL = "https://reqres.in";
+const BASE_URL = "";
 const LOGIN_ENDPOINT = "/api/login";
 const REGISTER_ENDPOINT = "/api/register";
 const USERS_ENDPOINT = "/api/users?page=";
