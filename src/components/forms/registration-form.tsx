@@ -6,11 +6,14 @@ import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
+import { useAuthentication } from "@/hooks/useAuthentication";
 
 const FormSchema = z
   .object({
     email: z.string().email(),
-    password: z.string().min(6),
+    password: z.string().min(6, {
+      message: "Password must be at least 6 characters long",
+    }),
     confirmPassword: z.string(),
   })
   .refine((data) => data.password === data.confirmPassword, {
@@ -19,6 +22,8 @@ const FormSchema = z
   });
 
 export function RegistrationForm() {
+  const { register } = useAuthentication();
+
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -29,9 +34,16 @@ export function RegistrationForm() {
   });
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
-    toast.success("Registration successful", {
-      description: <p>{JSON.stringify({ Email: data.email }, null, 2)}</p>,
-    });
+    register.mutate(
+      { email: data.email, password: data.password },
+      {
+        onSuccess: () => {
+          toast.success("Registration successful", {
+            description: <p>{JSON.stringify({ Email: data.email }, null, 2)}</p>,
+          });
+        },
+      },
+    );
   }
 
   return (
