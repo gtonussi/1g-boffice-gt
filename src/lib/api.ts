@@ -1,4 +1,4 @@
-import { User } from "@/types/user";
+import { TokenResponse } from "@/types/token-response";
 import { UserResponse } from "@/types/user-response";
 import axios from "axios";
 
@@ -14,12 +14,12 @@ export const api = axios.create({
   },
 });
 
-export async function login(data: { email: string; password: string }): Promise<User> {
+export async function login(data: { email: string; password: string }): Promise<TokenResponse> {
   const res = await api.post(LOGIN_ENDPOINT, data);
   return res.data;
 }
 
-export async function register(data: { email: string; password: string }): Promise<User> {
+export async function register(data: { email: string; password: string }): Promise<TokenResponse> {
   const res = await api.post(REGISTER_ENDPOINT, data);
   return res.data;
 }
