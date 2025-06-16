@@ -15,6 +15,26 @@ export const api = axios.create({
   },
 });
 
+function getTokenFromCookie(): string | null {
+  if (typeof window === "undefined") return null;
+  const cookies = document.cookie.split("; ");
+  for (const cookie of cookies) {
+    const [name, value] = cookie.split("=");
+    if (name === "token") {
+      return decodeURIComponent(value);
+    }
+  }
+  return null;
+}
+
+api.interceptors.request.use((config) => {
+  const token = getTokenFromCookie();
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
 export async function login(data: { email: string; password: string }): Promise<TokenResponse> {
   const res = await api.post(LOGIN_ENDPOINT, data);
   return res.data;
