@@ -21,6 +21,7 @@ function getTokenFromCookie(): string | null {
 }
 
 api.interceptors.request.use((config) => {
+  config.headers["x-api-key"] = "reqres-free-v1";
   const token = getTokenFromCookie();
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;

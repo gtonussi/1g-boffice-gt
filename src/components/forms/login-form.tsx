@@ -6,6 +6,7 @@ import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
+import { useAuthentication } from "@/hooks/useAuthentication";
 
 const FormSchema = z.object({
   email: z.string().email(),
@@ -13,6 +14,8 @@ const FormSchema = z.object({
 });
 
 export function LoginForm() {
+  const { login } = useAuthentication();
+
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -22,8 +25,12 @@ export function LoginForm() {
   });
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
-    toast.success("Registration successful", {
-      description: <p>{JSON.stringify({ Email: data.email }, null, 2)}</p>,
+    login.mutate(data, {
+      onError: (error) => {
+        toast.error("Login failed", {
+          description: error?.message || "Something went wrong",
+        });
+      },
     });
   }
 
@@ -55,7 +62,7 @@ export function LoginForm() {
           )}
         />
         <Button className="w-full" type="submit">
-          Register
+          Login
         </Button>
       </form>
     </Form>

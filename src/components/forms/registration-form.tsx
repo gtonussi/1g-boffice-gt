@@ -67,7 +67,7 @@ export function RegistrationForm() {
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <Input type="confirmPassword" placeholder="Confirm Password" {...field} />
+                <Input type="password" placeholder="Confirm Password" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
