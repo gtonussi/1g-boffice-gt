@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "https://reqres.in/api";
+const BASE_URL = "https://reqres.in";
 const LOGIN_ENDPOINT = "/api/login";
 const REGISTER_ENDPOINT = "/api/register";
 
@@ -21,11 +21,12 @@ function getTokenFromCookie(): string | null {
 }
 
 api.interceptors.request.use((config) => {
-  config.headers["x-api-key"] = "reqres-free-v1";
   const token = getTokenFromCookie();
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
+
+  config.headers["x-api-key"] = "reqres-free-v1";
   return config;
 });
 
