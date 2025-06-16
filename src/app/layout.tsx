@@ -6,6 +6,7 @@ import "./globals.css";
 
 import { Providers } from "@/components/providers";
 import { Toaster } from "@/components/ui/sonner";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 
 const robotoSans = Roboto({
   variable: "--font-roboto-sans",
@@ -31,7 +32,16 @@ export default function RootLayout({
       <head />
       <body className={`${robotoSans.variable} ${robotoMono.variable} antialiased`}>
         <Providers>
-          <main>{children}</main>
+          <main>
+            <div className="flex justify-center">
+              <div className="mt-4 max-w-5xl">
+                <div className="flex justify-end">
+                  <ThemeToggle />
+                </div>
+                <div className="mt-8">{children}</div>
+              </div>
+            </div>
+          </main>
           <Toaster />
         </Providers>
       </body>
