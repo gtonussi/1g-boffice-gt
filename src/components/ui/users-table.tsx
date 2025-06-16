@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/pagination";
 
 import { DataTable } from "./data-table";
+import { UserForm } from "../forms/user-form";
 
 const columns: ColumnDef<User>[] = [
   {
@@ -34,16 +35,16 @@ const columns: ColumnDef<User>[] = [
     },
   },
   {
-    accessorKey: "email",
-    header: "Email",
-  },
-  {
     accessorKey: "first_name",
     header: "First Name",
   },
   {
     accessorKey: "last_name",
     header: "Last Name",
+  },
+  {
+    accessorKey: "email",
+    header: "Email",
   },
 ];
 
@@ -58,37 +59,42 @@ export function UsersTable() {
 
   return (
     <div data-name="users-table">
-      {isLoading ? (
-        <div className="flex h-24 items-center justify-center">
-          <span>Loading...</span>
-        </div>
-      ) : (
-        <>
-          <DataTable columns={columns} data={data} />
-
-          <div className="mt-4 flex justify-center">
-            <Pagination>
-              <PaginationContent>
-                <PaginationItem>
-                  <PaginationPrevious
-                    disabled={isFirstPage}
-                    href={isFirstPage ? "" : `?page=${page - 1}`}
-                  />
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationLink href={`?page=${page}`}>{page}</PaginationLink>
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationNext
-                    disabled={isLastPage}
-                    href={isLastPage ? "" : `?page=${page + 1}`}
-                  />
-                </PaginationItem>
-              </PaginationContent>
-            </Pagination>
+      <div>
+        <UserForm />
+      </div>
+      <div className="mt-4">
+        {isLoading ? (
+          <div className="flex h-24 items-center justify-center">
+            <span>Loading...</span>
           </div>
-        </>
-      )}
+        ) : (
+          <>
+            <DataTable columns={columns} data={data} />
+
+            <div className="mt-4 flex justify-center">
+              <Pagination>
+                <PaginationContent>
+                  <PaginationItem>
+                    <PaginationPrevious
+                      disabled={isFirstPage}
+                      href={isFirstPage ? "" : `?page=${page - 1}`}
+                    />
+                  </PaginationItem>
+                  <PaginationItem>
+                    <PaginationLink href={`?page=${page}`}>{page}</PaginationLink>
+                  </PaginationItem>
+                  <PaginationItem>
+                    <PaginationNext
+                      disabled={isLastPage}
+                      href={isLastPage ? "" : `?page=${page + 1}`}
+                    />
+                  </PaginationItem>
+                </PaginationContent>
+              </Pagination>
+            </div>
+          </>
+        )}
+      </div>
     </div>
   );
 }
